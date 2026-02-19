@@ -6,7 +6,7 @@ app.use(express.json());
 
 // Route 1 - Home
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from CI pipeline!' });
+  res.json({ message: 'Hello from CI pipeline' });
 });
 
 // Route 2 - Add two numbers
