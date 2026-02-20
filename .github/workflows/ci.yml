@@ -40,3 +40,4 @@ jobs:
         with:
           name: test-results              # name of the artifact
           path: test-results/ 
+          overwrite: true 
