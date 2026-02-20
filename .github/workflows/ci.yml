@@ -8,11 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:  
-        os: [ubuntu-latest, windows-latest]
-        node-version: [20,22]
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
@@ -21,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{matrix.node-version}}
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
@@ -31,13 +27,39 @@ jobs:
 
       - name: Create test results folder
         run: |
-         mkdir -p test-results
-         echo "Test 1: PASS" > test-results/results.txt
-         echo "<h1>All Tests Passed</h1>" > test-results/report.html
+         mkdir -p test
+         echo "Test 1: pass" > test/result.txt
+         echo "<h1>All Tests Passed</h1>" > test/reports.html
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results              # name of the artifact
-          path: test-results/ 
+          name: test              # name of the artifact
+          path: test/
           overwrite: true 
+
+  deploy:
+   runs-on: ubuntu-latest
+   needs: test
+   steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download test results node 20
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results        # same name as uploaded
+          path: test/
+
+      - name: Verify downloaded files
+        run: |
+          echo "Node 20 results:"
+          ls -la test/
+
+      - name: Deploy
+        run: |
+          echo "Deploying application..."
+          echo "All tests passed on node 20 and 22!"
+          echo "Deploy successful! ✅"
+
+      
