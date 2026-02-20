@@ -34,7 +34,7 @@ jobs:
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: test              # name of the artifact
+          name: test-results             # name of the artifact
           path: test/
           overwrite: true 
 
