@@ -19,7 +19,7 @@ app.get('/add/:a/:b', (req, res) => {
 // Route 3 - Greet a user
 app.get('/greet/:name', (req, res) => {
   const name = req.params.name;
-  res.json({ message: `Hello, ${name}!` });
+  res.json({ message: `Hello, ${name}` });
 });
 
 module.exports = app;
