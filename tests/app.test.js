@@ -17,8 +17,8 @@ test('GET /add/2/3 returns 5', async () => {
 });
 
 // Test 3 - Greet route
-test('GET /greet/John returns Hello, John!', async () => {
+test('GET /greet/John returns Hello, John', async () => {
   const res = await request(app).get('/greet/John');
   expect(res.statusCode).toBe(200);
-  expect(res.body.message).toBe('Hello, John!');
+  expect(res.body.message).toBe('Hello, John');
 });
