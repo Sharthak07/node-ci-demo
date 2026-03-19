@@ -22,8 +22,10 @@ app.get('/greet/:name', (req, res) => {
   res.json({ message: `Hello, ${name}` });
 });
 
-app.listen(3000, '0.0.0.0', () => {
-  console.log('Server running on port 3000');
-});
+if (require.main === module) {
+  app.listen(3000, '0.0.0.0', () => {
+    console.log('Server running on port 3000');
+  });
+}
 
 module.exports = app;
