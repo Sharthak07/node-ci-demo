@@ -19,7 +19,7 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sharthak7:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
 
       - name: SSH into EC2 and redeploy
@@ -29,10 +29,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/sharthak7:latest
             docker stop myapp || true
             docker rm myapp || true
             docker run -d --name myapp \
               -p 3000:3000 \
               --restart unless-stopped \
-              ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+              ${{ secrets.DOCKER_USERNAME }}/sharthak7:latest
