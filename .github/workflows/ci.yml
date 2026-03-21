@@ -1,70 +1,65 @@
+---
 name: Node.js CI Pipelin
-
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-
+    branches:
+      - main
+  workflow_dispatch: null
 jobs:
   test:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm install
-
       - name: Run tests
         run: npm test
-
       - name: Create test results folder
         run: |
-         mkdir -p test
-         echo "Test 1: pass" > test/result.txt
-         echo "<h1>All Tests Passed</h1>" > test/reports.html
-
+          mkdir -p test
+          echo "Test 1: pass" > test/result.txt
+          echo "<h1>All Tests Passed</h1>" > test/reports.html
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results             # name of the artifact
+          name: test-results
           path: test/
-          overwrite: true 
-
+          overwrite: true
   deploy-staging:
-   runs-on: ubuntu-latest
-   needs: test
-   environment: staging
-   steps:
+    runs-on: ubuntu-latest
+    needs: test
+    environment: staging
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
       - name: Download test results node 20
         uses: actions/download-artifact@v4
         with:
-          name: test-results        # same name as uploaded
+          name: test-results
           path: test/
-
       - name: Verify downloaded files
         run: |
           echo "Node 20 results:"
           ls -la test/
-
- deploy-production:
+  
+  deploy-production:
+    runs-on: ubuntu-latest
     needs: deploy-staging
+    environment: production        # approval gate lives here
+    steps:
+      - run: echo "Approved! ✅"
+
+  call-ec2-deploy:
+    needs: deploy-production       # runs after approval
     uses: ./.github/workflows/ec2deploy.yml
-    environment: production        # ← approval gate is here now
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       EC2_HOST: ${{ secrets.EC2_HOST }}
       EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
       EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-
-      
