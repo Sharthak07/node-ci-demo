@@ -2,7 +2,7 @@ name: Node.js CI Pipelin
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -56,14 +56,15 @@ jobs:
           echo "Node 20 results:"
           ls -la test/
 
-  deploy-production:
-    runs-on: ubuntu-latest
+ deploy-production:
     needs: deploy-staging
-    environment: production
-    steps:
-     - run: |
-          echo "Deploying application..."
-          echo "All tests passed on node 20 and 22!"
-          echo "Deploy successful! ✅"
+    uses: ./.github/workflows/ec2deploy.yml
+    environment: production        # ← approval gate is here now
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      EC2_HOST: ${{ secrets.EC2_HOST }}
+      EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+      EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
       
