@@ -58,6 +58,7 @@ jobs:
 
   call-ec2-deploy:
     needs: deploy-production       # runs after approval
+    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/ec2deploy.yml
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
