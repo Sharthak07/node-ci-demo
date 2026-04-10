@@ -1,0 +1,17 @@
+{
+  "name": "node-ci-demo",
+  "version": "1.0.0",
+  "description": "Simple Node.js app for CI pipeline demo",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "npx --yes jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  }
+}
