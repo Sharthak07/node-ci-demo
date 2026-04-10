@@ -1,18 +1,10 @@
 name: Build and Deploy
 
 on:
-  workflow_call:          # removed on: push, now only ci.yml can trigger this
-    secrets:
-      DOCKER_USERNAME:
-        required: true
-      DOCKER_PASSWORD:
-        required: true
-      EC2_HOST:
-        required: true
-      EC2_USERNAME:
-        required: true
-      EC2_SSH_KEY:
-        required: true
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -29,8 +21,8 @@ jobs:
 
       - name: Build and push image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/node-ci-demo:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/node-ci-demo:latest
 
       - name: SSH into EC2 and redeploy
         uses: appleboy/ssh-action@v1.0.3
@@ -39,10 +31,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/node-ci-demo:latest
             docker stop myapp || true
             docker rm myapp || true
             docker run -d --name myapp \
               -p 3000:3000 \
               --restart unless-stopped \
-              ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+              ${{ secrets.DOCKER_USERNAME }}/node-ci-demo:latest
