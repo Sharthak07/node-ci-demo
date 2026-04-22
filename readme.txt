@@ -1,5 +1,1 @@
-experimenting and learning devops through this project
-
-
-
-
+Bulding small project for leaning devops and experimenting
